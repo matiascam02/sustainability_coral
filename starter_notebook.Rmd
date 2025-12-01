@@ -1,0 +1,85 @@
+---
+title: "Philips Supplier Sustainability Analytics - Starter Notebook (R)"
+output: html_document
+---
+
+# Philips Supplier Sustainability Analytics - Starter Notebook
+
+This notebook provides a minimal starting point for the assignment.
+
+## 1. Import Libraries
+
+```{r setup, message=FALSE, warning=FALSE}
+# Install packages if needed
+# install.packages(c("readxl", "dplyr", "ggplot2", "caret", "randomForest", "tidyr"))
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(caret)
+library(randomForest)
+library(tidyr)
+```
+
+## 2. Load Data
+
+```{r load-data}
+# Load the data
+df <- read_excel('data/SSP_Data.xlsx')
+
+# Display basic information
+cat(sprintf("Dataset shape: %d rows x %d columns\n", nrow(df), ncol(df)))
+cat(sprintf("Number of unique suppliers: %d\n", n_distinct(df$ID)))
+
+# Display first few rows
+head(df)
+```
+
+## 3. Your Analysis Here
+
+**Reminder:** Split by supplier ID, not randomly, to avoid data leakage.
+
+```{r analysis}
+# Example: Create train/test split by supplier ID
+set.seed(42)
+
+# Get unique supplier IDs
+unique_suppliers <- unique(df$ID)
+
+# Split supplier IDs (80/20)
+train_suppliers <- sample(unique_suppliers, 
+                         size = round(0.8 * length(unique_suppliers)))
+
+# Create train and test sets
+train_data <- df %>% filter(ID %in% train_suppliers)
+test_data <- df %>% filter(!(ID %in% train_suppliers))
+
+cat(sprintf("Training set: %d assessments from %d suppliers\n", 
+            nrow(train_data), n_distinct(train_data$ID)))
+cat(sprintf("Test set: %d assessments from %d suppliers\n", 
+            nrow(test_data), n_distinct(test_data$ID)))
+```
+
+```{r example-model, eval=FALSE}
+# # Example: Simple model (you'll need to handle missing values and feature selection)
+# # This is just a template - you need to implement proper preprocessing
+# 
+# # Select features (example - adjust based on your analysis)
+# gi_features <- c("Activities - Raw material extraction", "Facilities - Hospital / infirmary", "Number of workers - Direct employed", "Country")
+# X_train <- train_data[, gi_features]
+# y_train <- train_data$Val_Score
+# X_test <- test_data[, gi_features]
+# y_test <- test_data$Val_Score
+# 
+# # Train model
+# model <- randomForest(x = X_train, y = y_train, ntree = 100)
+# 
+# # Make predictions
+# predictions <- predict(model, X_test)
+# 
+# # Evaluate
+# rmse <- sqrt(mean((y_test - predictions)^2))
+# r2 <- cor(y_test, predictions)^2
+# cat(sprintf("RMSE: %.4f\n", rmse))
+# cat(sprintf("R²: %.4f\n", r2))
+```

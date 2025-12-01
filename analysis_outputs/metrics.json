@@ -1,0 +1,26 @@
+[
+  {
+    "feature_set": "gi_only",
+    "task": "regression",
+    "rmse": 0.17235452962055262,
+    "r2": 0.2181653198203809
+  },
+  {
+    "feature_set": "gi_only",
+    "task": "classification",
+    "accuracy": 0.8943661971830986,
+    "auc": 0.7609561752988048
+  },
+  {
+    "feature_set": "gi_plus_saq",
+    "task": "regression",
+    "rmse": 0.14839535080813357,
+    "r2": 0.42042436821312856
+  },
+  {
+    "feature_set": "gi_plus_saq",
+    "task": "classification",
+    "accuracy": 0.8943661971830986,
+    "auc": 0.870397199082458
+  }
+]

@@ -17,10 +17,10 @@ The addition of SAQ data provides a substantial lift in model performance, parti
 
 | Metric | GI-Only Model | GI + SAQ Model | Improvement |
 | :--- | :--- | :--- | :--- |
-| **RMSE** (Lower is better) | 0.172 | **0.148** | -14% |
-| **R²** (Higher is better) | 0.218 | **0.420** | +93% |
-| **AUC** (Higher is better) | 0.761 | **0.870** | +14% |
-| **Accuracy** | 89.4% | 89.4% | 0% |
+| **RMSE** (Lower is better) | 0.177 | **0.154** | -13% |
+| **R²** (Higher is better) | 0.277 | **0.456** | +65% |
+| **AUC** (Higher is better) | 0.839 | **0.874** | +4 pts |
+| **Accuracy** | 92.1% | 92.5% | +0.4% |
 
 > [!NOTE]
 > While accuracy remains stable (likely due to class imbalance), the AUC score demonstrates that the GI+SAQ model is significantly better at ranking suppliers and distinguishing Best-in-Class (BIC) performers.
@@ -61,7 +61,7 @@ We evaluated the model for geographic bias by comparing the False Negative Rate 
 ![Fairness Check](analysis_outputs/fairness_check.png)
 
 > [!WARNING]
-> **Potential Bias Detected:** The model shows a high False Negative Rate for suppliers in China (~94%). This means high-performing Chinese suppliers are frequently underestimated by the model. This could be due to regional differences in reporting or assessment standards.
+> **Potential Bias Detected:** The model shows a high False Negative Rate for suppliers in China (~86%). This means high-performing Chinese suppliers are frequently underestimated by the model. This could be due to regional differences in reporting or assessment standards.
 > **Mitigation:** Manual review is recommended for Chinese suppliers near the BIC threshold (e.g., predicted score 0.70-0.75) to avoid missing potential BIC candidates.
 
 ## Recommendations

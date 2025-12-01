@@ -1,26 +1,23 @@
-[
-  {
-    "feature_set": "gi_only",
-    "task": "regression",
-    "rmse": 0.17235452962055262,
-    "r2": 0.2181653198203809
+{
+  "gi_only": {
+    "rmse": 0.17696997764381864,
+    "r2": 0.2771697859150821,
+    "auc": 0.8391774891774891,
+    "accuracy": 0.921161825726141
   },
-  {
-    "feature_set": "gi_only",
-    "task": "classification",
-    "accuracy": 0.8943661971830986,
-    "auc": 0.7609561752988048
+  "gi_plus_saq": {
+    "rmse": 0.1535212406671505,
+    "r2": 0.45603112788013167,
+    "auc": 0.8742424242424243,
+    "accuracy": 0.9253112033195021
   },
-  {
-    "feature_set": "gi_plus_saq",
-    "task": "regression",
-    "rmse": 0.14839535080813357,
-    "r2": 0.42042436821312856
+  "improvement": {
+    "rmse_pct": 13.250121454986335,
+    "r2_pct": 64.5313273864014,
+    "auc_pts": 3.506493506493513
   },
-  {
-    "feature_set": "gi_plus_saq",
-    "task": "classification",
-    "accuracy": 0.8943661971830986,
-    "auc": 0.870397199082458
+  "fairness": {
+    "fnr_china": 0.8571428571428571,
+    "fnr_row": NaN
   }
-]
+}

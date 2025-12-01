@@ -61,8 +61,21 @@ We evaluated the model for geographic bias by comparing the False Negative Rate 
 ![Fairness Check](analysis_outputs/fairness_check.png)
 
 > [!WARNING]
-> **Potential Bias Detected:** The model shows a high False Negative Rate for suppliers in China (~86%). This means high-performing Chinese suppliers are frequently underestimated by the model. This could be due to regional differences in reporting or assessment standards.
-> **Mitigation:** Manual review is recommended for Chinese suppliers near the BIC threshold (e.g., predicted score 0.70-0.75) to avoid missing potential BIC candidates.
+> **High False Negative Rate for China (~86%)**
+> 
+> **Root Causes:**
+> 1. **Severe class imbalance:** Only ~8% of suppliers are BIC
+> 2. **Conservative model:** When uncertain, predicts non-BIC (the majority class)
+> 3. **Borderline cases:** Many suppliers score 0.70-0.80, making classification difficult
+>
+> **Business Impact:** High-performing Chinese suppliers may be overlooked for partnerships.
+>
+> **Mitigations:**
+> - Manual review for China suppliers with predicted score 0.65-0.75
+> - Consider lowering the BIC threshold for China (0.70 instead of 0.75)
+> - Develop region-specific classification models
+>
+> *Note: "Rest of World" excluded from FNR analysis due to insufficient BIC suppliers in the test set.*
 
 ## Recommendations
 1.  **Adopt GI+SAQ Model:** The significant performance lift justifies the effort of collecting SAQ data.

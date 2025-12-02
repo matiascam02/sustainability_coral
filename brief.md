@@ -53,6 +53,12 @@ For classification, Random Forest with GI+SAQ achieves ROC-AUC=0.912 (82% above 
 
 Logistic Regression provides better balance (F1=0.444) for identifying Best-in-Class suppliers. The results confirm that self-assessment questionnaires enhance predictive power beyond observable characteristics alone.
 
+Random Forest regression with GI+SAQ features achieves the best performance (RMSE=0.145, R²=0.445), explaining 44.5% of sustainability score variance, nearly double the GI-only model (R²=0.230). Ridge regression fails with high-dimensional sparse data (R²=-3.71 for GI+SAQ).
+
+For classification, Random Forest with GI+SAQ achieves ROC-AUC=0.912 (82% above baseline), demonstrating great ranking ability, though with conservative predictions (precision=0.667, recall=0.061).
+
+Logistic Regression provides better balance (F1=0.444) for identifying Best-in-Class suppliers. The results confirm that self-assessment questionnaires enhance predictive power beyond observable characteristics alone.
+
 | Metric | GI-Only Model | GI + SAQ Model | Improvement |
 | :--- | :--- | :--- | :--- |
 | **RMSE** | 0.172 | **0.148** | -14% |
@@ -67,17 +73,26 @@ Logistic Regression provides better balance (F1=0.444) for identifying Best-in-C
 ## Feature Importance & Interpretation
 
 ### GI-Only Drivers
+
 The most influential GI features relate to the assessment context and workforce scale.
+
 ![GI-Only Feature Importance](analysis_outputs/shap_gi_only.png)
-*   **Assessment Year:** Strongest driver, likely reflecting rising sustainability standards over time.
-*   **Workforce Size (Total/Male):** Larger workforce counts correlate with score variance, possibly indicating that larger suppliers face more scrutiny or have more resources for compliance.
+
+- **Assessment Year:** Strongest driver, likely reflecting rising sustainability standards over time.
+- **Workforce Size (Total/Male):** Larger workforce counts correlate with score variance, possibly indicating that larger suppliers face more scrutiny or have more resources for compliance.
+
+SHAP analysis of the GI-only Random Forest model reveals that workforce size and assessment year are the dominant predictors of sustainability scores, followed by gender composition and employment type.
+
+Country is not among the top 10 drivers despite China representing 90% of the dataset, indicating that within-country supplier variation exceeds between-country differences. The concentration of importance in workforce metrics highlights the limited predictive power of observable characteristics alone.
 
 SHAP analysis of the GI-only Random Forest model reveals that workforce size and assessment year are the dominant predictors of sustainability scores, followed by gender composition and employment type.
 
 Country is not among the top 10 drivers despite China representing 90% of the dataset, indicating that within-country supplier variation exceeds between-country differences. The concentration of importance in workforce metrics highlights the limited predictive power of observable characteristics alone.
 
 ### GI + SAQ Drivers
+
 When SAQ data is available, specific questionnaire responses become the primary predictors.
+
 ![GI+SAQ Feature Importance](analysis_outputs/shap_gi_plus_saq.png)
 
 SHAP analysis of the GI+SAQ Random Forest model reveals that assessment year remains the dominant predictor, followed by missing data indicators for questions Q301_6, Q1260, and Q1382 (0.007-0.025), demonstrating that non-response patterns are highly informative signals of sustainability risk. 

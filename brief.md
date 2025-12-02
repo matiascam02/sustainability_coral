@@ -2,7 +2,7 @@
 
 Matias Cam, Armel Esper, Rutvi Gala, Krisztián Kerényi
 
-This document is the brief.
+Link to the GitHub repository : https://github.com/matiascam02/sustainability_coral
 
 ## Content
 

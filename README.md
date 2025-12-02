@@ -2,6 +2,8 @@
 
 ## Quick Start
 
+In this repository, you will find the brief in the markdown `brief.md` and the Python notebook in the file `starter_notebook.ipynb`.
+
 ### 1. Install Required Packages
 ```bash
 pip install -r requirements.txt
@@ -16,7 +18,7 @@ df = pd.read_excel('data/SSP_Data.xlsx')
 
 ## Assignment Requirements
 
-**Main Deliverable:** 4-6 page brief (slide deck or written report)
+**Main Deliverable:** 4-6 page brief
 
 **Core Tasks:**
 1. Build GI-only models (observable supplier characteristics)
@@ -24,8 +26,6 @@ df = pd.read_excel('data/SSP_Data.xlsx')
 3. Compare both approaches
 4. Create risk segmentation framework
 5. Check fairness across regions
-
-**Expected Timeline:** 10-14 hours
 
 ---
 
@@ -48,7 +48,7 @@ df = pd.read_excel('data/SSP_Data.xlsx')
 ## Critical Requirements
 
 ### ⚠️ Train/Test Split
-**You MUST split by supplier ID, not randomly.**
+**Split by supplier ID, not randomly.**
 
 Random split causes data leakage (same supplier in train and test).
 
@@ -58,44 +58,27 @@ Random split causes data leakage (same supplier in train and test).
 
 ### Q-Codes (SAQ Features)
 - Question text is confidential (Philips proprietary)
-- You have: Q-code → Topic → Chapter mapping
-- This is sufficient for interpretation
+- Q-code → Topic → Chapter mapping
 - Example: "Q1272 ranks #1" → "Environment Corrective Action matters most"
 
 ### Missing Values
-- Document your approach
+- Median imputation for numeric features and mode imputation for categorical features. Drop columns with more than 95% missing values.
 
 ### Geographic Distribution
-- Check for fairness across regions in your analysis
-
----
-
-## Expected Performance Ranges
-
-If your results differ but methodology is sound, that's acceptable.
+- Check for fairness across regions.
 
 ---
 
 ## Deliverable Checklist
 
-Your brief should include:
+Brief includes:
 
-- [ ] Two-stage results comparison (GI-only vs GI+SAQ)
-- [ ] Feature importance for both stages with business interpretation
-- [ ] Risk segmentation framework (3-5 tiers with recommended actions)
-- [ ] Fairness analysis (check performance across regions)
-- [ ] Two visualizations: feature importance chart + calibration/comparison plot
-- [ ] Business recommendations
-
----
-
-## Common Mistakes to Avoid
-
-❌ Random train/test split (data leakage)  
-❌ Skipping GI-only analysis  
-❌ Listing Q-codes without interpreting topics  
-❌ No fairness check  
-❌ Notebook-focused instead of brief-focused  
+- Two-stage results comparison (GI-only vs GI+SAQ)
+- Feature importance for both stages with business interpretation
+- Risk segmentation framework (3-5 tiers with recommended actions)
+- Fairness analysis (check performance across regions)
+- Two visualizations
+- Business recommendations
 
 ---
 
@@ -104,14 +87,3 @@ Your brief should include:
 **Reference:** Tan et al. (2024) "Stop Auditing and Start to CARE" - INFORMS Journal on Applied Analytics
 
 ---
-
-## Academic Integrity
-
-- Use dataset for coursework only
-- Work independently
-- Cite any external resources used
-- Do not share code with classmates
-
----
-
-**Good luck! Focus on the business insights, not just the models.**

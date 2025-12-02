@@ -1,48 +1,57 @@
 # Philips Supplier Sustainability Analytics Brief
 
+Matias Cam, Armel Esper, Rutvi Gala, Krisztián Kerényi
+
+Link to the GitHub repository : https://github.com/matiascam02/sustainability_coral
+
 ## Content
 
-This brief is a short summary of the `starter_notebook.ipynb` where you can find the detailed process, code and results.
+This brief provides a summary of the `starter_notebook.ipynb`, which contains the full process, code, and results. By running the notebook, you will be able to run our models and visualisations.
 
 ## Executive Summary
-
-This analysis evaluates the effectiveness of General Information (GI) and Self-Assessment Questionnaire (SAQ) data in predicting supplier sustainability performance (`Val_Score`). Using a supplier-stratified validation approach, we found that augmenting GI data with SAQ responses significantly improves predictive power, nearly doubling the R² score and increasing AUC by 11 points. We recommend a two-stage risk segmentation framework to prioritize interventions, while noting a potential fairness concern regarding higher false negative rates for suppliers in China.
+This analysis evaluates the effectiveness of General Information (GI) and Self-Assessment Questionnaire (SAQ) data in predicting supplier sustainability performance (`Val_Score`). Using a supplier-stratified validation approach, we found that augmenting GI data with SAQ responses significantly improves predictive power, nearly doubling the R² score and increasing AUC. We recommend a two-stage risk segmentation framework to prioritize interventions, while noting a potential fairness concern regarding higher false negative rates for suppliers in China.
 
 ## Methodology
 
 **Data:** 1,236 assessments from 463 suppliers (2016-2025).
 
-- The target variable is Val_Score (0 to 1). The Best-in-Class threshold is 0.75. The average supplier sustainability score is 0.48, with half of all assessments scoring below 0.50. While the maximum observed score reaches 0.90, the concentration of scores in the 0.45-0.60 range suggests significant room for improvement across Philips' supplier base, particularly in reaching the 0.75 Best-in-Class benchmark.
+- The target variable is Val_Score (0 to 1). The best-in-Class threshold is 0.75. The average supplier sustainability score is 0.48, with half of all assessments scoring below 0.50. While the maximum observed score reaches 0.90, the concentration of scores in the 0.45-0.60 range suggests significant room for improvement across Philips' supplier base, particularly in reaching the 0.75 Best-in-Class benchmark.
 
 - There are 31 GI features:
-  - 3 categorical: Country, Assessment type, Assessment Year
-  - 28 numerical: Activities, Facilities, Workforce metrics
+    - 3 categorical: Country, Assessment type, Assessment Year
+    - 28 numerical: Activities, Facilities, Workforce metrics
 
 - There are 450 SAQ features (all columns starting with "Q")
 
-- GI features have relatively low missingness (most <1%), except for specialized activities (85%+): Activities - Testing and measurement, Number of workers - Indirect employed, Activities - Surface treatment / plating, and Activities - Silkscreen / pad printing.
+- GI features have relatively low missingness (most <1%), except for specialized activities (85%+) : Activities - Testing and measurement, Number of workers - Indirect employed, Activities - Surface treatment / plating, and Activities - Silkscreen / pad printing.
 
 - Some SAQ features have extreme missingness (some >99%), likely because not all questions apply to all suppliers or suppliers skip questions.
 
-- The dataset is cleaned by removing assessments lacking validated scores or country labels.
+- The dataset is cleaned by removing assessments without validated scores or country labels. 
 
-**Validation:** Stratified split by `Supplier ID` (80/20) to prevent data leakage.
+**Validation:** We perform a stratified split by `Supplier ID` (80/20) to prevent data leakage.
 
-**Feature Engineering Pipeline:** A pipeline handles missing data through median imputation for numeric features and mode imputation for categorical features. Features with >95% missing values were removed, retaining 31 GI features and 434 GI+SAQ features. One-hot encoding transforms categorical variables, and standardization ensures numeric features contribute equally to model training.
+**Feature Engineering Pipeline** : A pipeline handles missing data through median imputation for numeric features and mode imputation for categorical features. Features with >95% missing values were removed, retaining 31 GI features and 434 GI+SAQ features. One-hot encoding transforms categorical variables, and standardization ensures numeric features contribute equally to model training
 
 **Models:** Random Forest Regressor (for scoring) and Classifier (for BIC identification).
 
 **Feature Sets:**
-1. **GI-only:** Publicly observable data (Activities, Facilities, Workforce).
-2. **GI+SAQ:** GI data plus detailed questionnaire responses.
+    1.  **GI-only:** Publicly observable data (Activities, Facilities, Workforce).
+    2.  **GI+SAQ:** GI data plus detailed questionnaire responses.
 
 ## Baseline Model
 
-Baseline models establish performance benchmarks: the mean-prediction regression achieves RMSE=0.198 and MAE=0.164, while the majority-class classifier achieves 88.4% accuracy but only 0.5 ROC-AUC. The high baseline accuracy reflects class imbalance (only 12% of suppliers are Best-in-Class), making ROC-AUC the more meaningful metric for evaluating model performance. Our models must exceed these baselines to demonstrate value.
+Baseline models establish performance benchmarks: the mean-prediction regression achieves RMSE=0.198 and MAE=0.164, while the majority-class classifier achieves 88.4% accuracy but only 0.5 ROC-AUC. The high baseline accuracy reflects class imbalance (only 12% of suppliers are Best-in-Class), making ROC-AUC the more meaningful metric for evaluating model performance. Our models must exceed these baselines.
 
 ## Results Comparison
 
-The addition of SAQ data provides a substantial lift in model performance, particularly for regression tasks (predicting the exact score).
+The addition of SAQ data provides an increase in model performance, particularly for regression tasks (predicting the exact score).
+
+Random Forest regression with GI+SAQ features achieves the best performance (RMSE=0.145, R²=0.445), explaining 44.5% of sustainability score variance, nearly double the GI-only model (R²=0.230). However, ridge regression fails with high-dimensional sparse data (R²=-3.71 for GI+SAQ). 
+
+For classification, Random Forest with GI+SAQ achieves ROC-AUC=0.912 (82% above baseline), demonstrating great ranking ability, though with conservative predictions (precision=0.667, recall=0.061). 
+
+Logistic Regression provides better balance (F1=0.444) for identifying Best-in-Class suppliers. The results confirm that self-assessment questionnaires enhance predictive power beyond observable characteristics alone.
 
 Random Forest regression with GI+SAQ features achieves the best performance (RMSE=0.145, R²=0.445), explaining 44.5% of sustainability score variance, nearly double the GI-only model (R²=0.230). Ridge regression fails with high-dimensional sparse data (R²=-3.71 for GI+SAQ).
 
@@ -60,6 +69,7 @@ Logistic Regression provides better balance (F1=0.444) for identifying Best-in-C
 > [!NOTE]
 > While accuracy remains stable (likely due to class imbalance), the AUC score demonstrates that the GI+SAQ model is significantly better at ranking suppliers and distinguishing Best-in-Class (BIC) performers.
 
+
 ## Feature Importance & Interpretation
 
 ### GI-Only Drivers
@@ -75,17 +85,21 @@ SHAP analysis of the GI-only Random Forest model reveals that workforce size and
 
 Country is not among the top 10 drivers despite China representing 90% of the dataset, indicating that within-country supplier variation exceeds between-country differences. The concentration of importance in workforce metrics highlights the limited predictive power of observable characteristics alone.
 
+SHAP analysis of the GI-only Random Forest model reveals that workforce size and assessment year are the dominant predictors of sustainability scores, followed by gender composition and employment type.
+
+Country is not among the top 10 drivers despite China representing 90% of the dataset, indicating that within-country supplier variation exceeds between-country differences. The concentration of importance in workforce metrics highlights the limited predictive power of observable characteristics alone.
+
 ### GI + SAQ Drivers
 
 When SAQ data is available, specific questionnaire responses become the primary predictors.
 
 ![GI+SAQ Feature Importance](analysis_outputs/shap_gi_plus_saq.png)
 
-SHAP analysis of the GI+SAQ Random Forest model reveals that assessment year remains the dominant predictor, followed by missing data indicators for questions Q301_6, Q1260, and Q1382 (0.007-0.025), demonstrating that non-response patterns are highly informative signals of sustainability risk.
+SHAP analysis of the GI+SAQ Random Forest model reveals that assessment year remains the dominant predictor, followed by missing data indicators for questions Q301_6, Q1260, and Q1382 (0.007-0.025), demonstrating that non-response patterns are highly informative signals of sustainability risk. 
 
-Only two actual questionnaire responses appear in the top 10: Q1224 (Environmental Procedures, 0.013) and Q1297 (Health & Safety Implementation, 0.007), highlighting the importance of documented processes and execution.
+Only two actual questionnaire responses appear in the top 10: Q1224 (Environmental Procedures, 0.013) and Q1297 (Health & Safety Implementation, 0.007), highlighting the importance of documented processes and execution. 
 
-Workforce metrics retain importance but with 31-78% reduced impact compared to the GI-only model, confirming that questionnaire responses provide superior signal to observable characteristics. The shift from facility-based proxies (canteen, chemical warehouse) to direct practice questions validates the value of self-assessment data.
+Workforce metrics remain important but with 31-78% reduced impact compared to the GI-only model, confirming that questionnaire responses provide superior signal to observable characteristics. The shift from facility-based proxies (canteen, chemical warehouse) to direct practice questions validates the value of self-assessment data.
 
 ## Risk Segmentation Framework
 
@@ -113,28 +127,22 @@ We evaluated the model for geographic bias by comparing the False Negative Rate 
 > **Potential Bias Detected:** The model shows a high False Negative Rate for suppliers in China (~86%). This means high-performing Chinese suppliers are frequently underestimated by the model.
 
 | Region | Total Assessments | BIC Suppliers | BIC Rate |
-| :--- | :--- | :--- | :--- |
+|--------|------------------|---------------|----------|
 | China | 1,172 | 93 | 7.9% |
 | Rest of World | 90 | 4 | 4.4% |
-
-**Causes of this bias:**
-
-1. **Severe class imbalance** - Only 7.9% of China suppliers are BIC. The model learns that "non-BIC" is almost always the right answer.
-
-2. **Conservative predictions** - When the model is uncertain about a borderline supplier (score 0.70-0.80), it defaults to predicting "non-BIC" because that's correct 92% of the time.
-
-3. **144 borderline cases** - Many China suppliers have scores between 0.70-0.80 (near the 0.75 threshold). These look similar to non-BIC suppliers in their features, making them hard to classify correctly.
-
-4. **Model optimizes for accuracy** - Getting 92% accuracy by being conservative is "rewarded" even though it misses most BIC suppliers.
 
 > **Mitigation:** Manual review is recommended for Chinese suppliers near the BIC threshold (e.g., predicted score 0.70-0.75) to avoid missing potential BIC candidates.
 
 ## Recommendations
 
-1. **Adopt GI+SAQ Model:** The GI+SAQ Random Forest model achieves 93% better explanatory power (R²=0.445 vs 0.230) and 18% higher classification accuracy (ROC-AUC=0.912 vs 0.774) compared to GI-only models, demonstrating that the operational effort of collecting self-assessment questionnaire data delivers substantial predictive value. This model should become the primary tool for supplier sustainability assessment and risk segmentation.
+1. **Adopt GI+SAQ Model:** The GI+SAQ Random Forest model achieves 93% better explanatory power (R²=0.445 vs 0.230) and 18% higher classification accuracy (ROC-AUC=0.912 vs 0.774) compared to GI-only models, demonstrating that the operational effort of collecting self-assessment questionnaire data delivers predictive value. This model should become the primary tool for supplier sustainability assessment and risk segmentation.
 
-2. **Focus on "Implementation" Questions:** SHAP analysis identifies Q1224 (Environmental Procedures) and Q1297 (Health & Safety Implementation) as the most predictive questionnaire responses, suggesting that documented processes and actual execution matter more than high-level policies. We suggest to prioritize validation of these specific questions during on-site audits, and to consider developing targeted supplier training programs around procedural documentation and implementation practices.
+2. **Focus on Implementation Questions:** SHAP analysis identifies Q1224 (Environmental Procedures) and Q1297 (Health & Safety Implementation) as the most predictive questionnaire responses, suggesting that documented processes and actual execution matter more than high-level policies. We suggest to prioritize validation of these specific questions during on-site audits, and to consider developing targeted supplier training programs around procedural documentation and implementation practices.
 
 3. **Address Regional Bias:** The model exhibits an 85.7% False Negative Rate for Chinese suppliers, systematically underestimating 18 of 21 Best-in-Class suppliers in the test set and creating unfair disadvantages in recognition and partnership opportunities.
 
-4. **Leverage Non-Response Patterns:** Missing data indicators for questions Q301_6, Q1260, and Q1382 rank among the top 8 most important features, revealing that which questions suppliers refuse to answer is as predictive as their actual responses. We suggest investigating the content of these high-impact questions to understand why non-response correlates with poor sustainability performance, make them mandatory fields in future assessments, and flag suppliers with low questionnaire completion rates (<80%) for immediate follow-up as transparency gaps signal elevated risk.
+4. **Leverage Non-Response Patterns:** Missing data indicators for questions Q301_6, Q1260, and Q1382 rank among the top 8 most important features, revealing that which questions suppliers refuse to answer is as predictive as their actual responses. We suggest investigating the content of these high-impact questions to understand why non-response correlates with poor sustainability performance, make them mandatory fields in future assessments, and flag suppliers with low questionnaire completion rates (<80%) for immediate follow-up as transparency gaps can signal elevated risk.
+
+## Summary 
+
+Philips’ supplier sustainability performance can be predicted more accurately when combining General Information (GI) data with Self‑Assessment Questionnaire (SAQ) responses, nearly doubling model explanatory power and significantly improving AUC. SAQ data, including both specific responses and non‑response patterns, emerges as the strongest indicator of sustainability risk, enabling a five‑tier risk segmentation that highlights widespread underperformance across suppliers. A fairness check reveals that the model systematically underestimates high‑performing Chinese suppliers, prompting a recommendation for targeted manual review.

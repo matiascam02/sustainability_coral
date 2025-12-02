@@ -76,7 +76,7 @@ Logistic Regression provides better balance (F1=0.444) for identifying Best-in-C
 
 The most influential GI features relate to the assessment context and workforce scale.
 
-![GI-Only Feature Importance](analysis_outputs/shap_gi_only.png)
+<img src="analysis_outputs/shap_gi_only.png" alt="GI-Only Feature Importance" style="width:65%;">
 
 - **Assessment Year:** Strongest driver, likely reflecting rising sustainability standards over time.
 - **Workforce Size (Total/Male):** Larger workforce counts correlate with score variance, possibly indicating that larger suppliers face more scrutiny or have more resources for compliance.
@@ -93,7 +93,7 @@ Country is not among the top 10 drivers despite China representing 90% of the da
 
 When SAQ data is available, specific questionnaire responses become the primary predictors.
 
-![GI+SAQ Feature Importance](analysis_outputs/shap_gi_plus_saq.png)
+<img src="analysis_outputs/shap_gi_plus_saq.png" alt="GI+SAQ Feature Importance" style="width:65%;">
 
 SHAP analysis of the GI+SAQ Random Forest model reveals that assessment year remains the dominant predictor, followed by missing data indicators for questions Q301_6, Q1260, and Q1382 (0.007-0.025), demonstrating that non-response patterns are highly informative signals of sustainability risk. 
 
@@ -105,7 +105,7 @@ Workforce metrics remain important but with 31-78% reduced impact compared to th
 
 We propose a 5-tier risk segmentation based on the predicted `Val_Score` to guide procurement actions.
 
-![Risk Segmentation](analysis_outputs/risk_segmentation.png)
+<img src="analysis_outputs/risk_segmentation.png" alt="Risk Segmentation" style="width:65%;">
 
 | Risk Tier | Score Range | Recommended Action |
 | :--- | :--- | :--- |
@@ -121,7 +121,7 @@ The risk segmentation framework classifies 49% of test suppliers as Critical Ris
 
 We evaluated the model for geographic bias by comparing the False Negative Rate (FNR) – the rate at which actual BIC suppliers are incorrectly classified as non-BIC.
 
-![Fairness Check](analysis_outputs/fairness_check.png)
+<img src="analysis_outputs/fairness_check.png" alt="Fairness Check" style="width:65%;">
 
 > [!WARNING]
 > **Potential Bias Detected:** The model shows a high False Negative Rate for suppliers in China (~86%). This means high-performing Chinese suppliers are frequently underestimated by the model.

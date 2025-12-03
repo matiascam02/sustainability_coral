@@ -1,6 +1,6 @@
 # Philips Supplier Sustainability Analytics Brief
 
-Matias Cam, Armel Esper, Rutvi Gala, Krisztián Kerényi
+Rutvi Gala, Krisztián Kerényi, Armel Esper, Matias Cam 
 
 Link to the GitHub repository : https://github.com/matiascam02/sustainability_coral
 
